@@ -46,7 +46,7 @@ function _module(config) {
         require('request').debug = true
         require('request-debug')(request);
     */
-/*
+
     deviceCache.on( 'set', ( key, value ) => {
         let data = JSON.stringify( { module: global.moduleName, id : key, value : value });
         logger.info( 'sentinel.device.insert => ' + data );
@@ -64,7 +64,7 @@ function _module(config) {
         logger.debug( 'sentinel.device.update => ' + data );
         pub.publish( 'sentinel.device.update', data);
     });
-*/
+
 	var that = this;
 
     messageHandler.on('device.update', () => {
