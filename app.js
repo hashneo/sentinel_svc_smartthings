@@ -28,11 +28,26 @@ app.use(cookieParser());
 
 const securityHandlers = require('sentinel-common').securityHandlers;
 
+/*
 let appConfig = {
     appRoot: __dirname, // required config
     swaggerSecurityHandlers: {
         Oauth:(req, authOrSecDef, scopesOrApiKey, cb) => {
             securityHandlers.Oauth(req, authOrSecDef, scopesOrApiKey, cb);
+        }
+    }
+};
+*/
+
+let appConfig = {
+    appRoot: __dirname, // required config
+    swaggerSecurityHandlers: {
+        Oauth: (req, authOrSecDef, scopesOrApiKey, cb) => {
+            if (scopesOrApiKey === 'open') {
+                cb();
+            }else {
+                cb();
+            }
         }
     }
 };
