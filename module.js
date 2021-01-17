@@ -256,6 +256,47 @@ function _module(config) {
         return result;
     }
 
+    function mapType( capabilities ){
+
+        if ( capabilities.find(e => e === 'switch') ){
+            if ( capabilities.find(e => e === 'level') ){
+                if ( capabilities.find(e => e === 'color') ){
+                    return 'light.dimmable.rgbw';
+                }
+                return 'light.dimmable';
+            }
+            return 'switch';
+        }
+        if ( capabilities.find(e => e === 'thermostat') ){
+            if ( capabilities.find(e => e === 'heatingSetpoint') && capabilities.find(e => e === 'coolingSetpoint') ){
+                return 'hvac';
+            }
+            return 'sensor.thermostat';
+        }
+        if ( capabilities.find(e => e === 'valve') ){
+            return 'valve';
+        }
+        if ( capabilities.find(e => e === 'water') ){
+            return 'sensor.water';
+        }
+        if ( capabilities.find(e => e === 'motion') ){
+            return 'sensor.motion';
+        }
+        if ( capabilities.find(e => e === 'contact') ){
+            return 'sensor.contact';
+        }
+        if ( capabilities.find(e => e === 'temperature') ){
+            return 'sensor.temperature';
+        }
+        if ( capabilities.find(e => e === 'humidity') ){
+            return 'sensor.humidity';
+        }
+        if ( capabilities.find(e => e === 'lock') ){
+            return 'lock';
+        }
+        return  'unknown';
+    }
+
     function loadSystem(){
         return new Promise( (fulfill,reject) => {
 
@@ -281,7 +322,7 @@ function _module(config) {
                             }
                         }
 
-                        d.type = 'unknown';
+                        d.type = mapType( device.components.capabilities );
 
                         if ( global.config.types ){
                             if ( global.config.types[d.id] ) {
@@ -304,16 +345,6 @@ function _module(config) {
 
                                 statusCache.set(d.id, processStatus(d.type, { components : {main : device.components.states } } ));
                             }
-/*
-                            smartThings.getDeviceStatus( d.id )
-                                .then( (status) => {
-                                    statusCache.set(d.id, processStatus(d.type, status));
-                                })
-                                .catch( (err) =>{
-                                    console.log(err);
-                                })
-
- */
                         }
                     })
 
