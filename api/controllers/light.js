@@ -20,9 +20,10 @@ module.exports.setLightLevel = (req, res) => {
     let value = req.swagger.params.level.value;
 
     global.module.sendCommand(id, 'setLevel', [value])
-        .then( (status) => {
+/*        .then( (status) => {
             return global.module.sendCommand(id, 'on');
         })
+*/
         .then( (status) => {
             res.json( { data: { status: status }, result : 'ok' } );
         })

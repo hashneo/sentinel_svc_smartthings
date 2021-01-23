@@ -187,6 +187,8 @@ function SmartThings(config) {
                 .then( (devices) => {
 
                     devices.forEach( async (device) => {
+
+                        logger.debug( JSON.stringify(device) );
 /*
                         let capabilities = [];
                         device.components.forEach( (component) => {
