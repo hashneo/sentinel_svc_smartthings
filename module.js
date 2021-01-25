@@ -202,39 +202,43 @@ function _module(config) {
 
     function processStatusValue(k, v){
 
-        let r = /([a-zA-Z\-]+)([0-9]{0,})/i;
-        let m;
+        try {
+            let r = /([a-zA-Z\-]+)([0-9]{0,})/i;
+            let m;
 
-        if ( (m = k.match(r) ) !== null )  {
+            if ((m = k.match(r)) !== null) {
 
-            let p = mapper[m[1]];
+                let p = mapper[m[1]];
 
-            if (p){
-                let data = p.process({}, v);
+                if (p) {
+                    let data = p.process({}, v);
 
-                if ( m[2] !== "" ){
-                    let indexedResult = {};
-                    Object.keys( data ).forEach( ( k ) => {
-                        indexedResult[k] = {};
-                        indexedResult[k][m[2]] = data[k];
-                    });
-                    data = indexedResult;
-                }
-
-                if ( data !== null ) {
-                    let l = Object.keys(data);
-
-                    if (l.length === 0) {
-                        logger.debug(`mapping ${k} does nothing, data => ${JSON.stringify(v)}`)
+                    if (m[2] !== "") {
+                        let indexedResult = {};
+                        Object.keys(data).forEach((k) => {
+                            indexedResult[k] = {};
+                            indexedResult[k][m[2]] = data[k];
+                        });
+                        data = indexedResult;
                     }
-                }
-                return data;
-            }
-            else {
-                logger.info(`unknown mapping ${k}, data => ${JSON.stringify(v)}`)
-            }
 
-            return null;
+                    if (data !== null) {
+                        let l = Object.keys(data);
+
+                        if (l.length === 0) {
+                            logger.debug(`mapping ${k} does nothing, data => ${JSON.stringify(v)}`)
+                        }
+                    }
+                    return data;
+                } else {
+                    logger.info(`unknown mapping ${k}, data => ${JSON.stringify(v)}`)
+                }
+
+                return null;
+            }
+        }
+        catch(err){
+            logger.error(err);
         }
     }
 
@@ -324,19 +328,23 @@ function _module(config) {
 
                         d.type = mapType( device.components.capabilities );
 
+                        logger.debug(`device '${d.name} (${d.id})' capabilities '${device.components.capabilities}' mapped to type '${d.type}'`);
+
                         if ( global.config.types ){
                             if ( global.config.types[d.id] ) {
                                 d.type = global.config.types[d.id];
+                                logger.debug(`device '${d.name} (${d.id})' manually converted to type '${d.type}'`);
                             }
                         }
 
                         if ( global.config.hidden ){
                             if ( global.config.hidden.find( id => id === d.id ) ) {
-                                d.type = undefined;
+                                d.hidden = true;
+                                logger.info(`device '${d.name} (${d.id})' is marked as hidden`);
                             }
                         }
 
-                        if (d.type !== undefined) {
+                        if (d.type !== undefined || d.hidden ) {
                             deviceCache.set(d.id, d);
 
                             if (device.components.states){
