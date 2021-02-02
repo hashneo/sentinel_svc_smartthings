@@ -3,7 +3,10 @@
 module.exports.process = (_data, _state) => {
 
     _data.tamper = {
-        level : (_state.value)
+        armed : true,
+        tripped : {
+            current : (_state.value !== 'clear'),
+        }
     };
 
     return _data;
