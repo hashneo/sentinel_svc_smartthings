@@ -128,21 +128,7 @@ function SmartThings(config) {
     //const {SmartThingsClient, BearerTokenAuthenticator} = require('@smartthings/core-sdk');
     const client = new SmartThingsClient(new BearerTokenAuthenticator(config.groovySmartApp.accessToken));
 
-    const redis = require('redis');
     const logger = require('sentinel-common').logger;
-
-    let pub = redis.createClient(
-        {
-            host: process.env.REDIS || global.config.redis || '127.0.0.1' ,
-            socket_keepalive: true,
-            retry_unfulfilled_commands: true
-        }
-    );
-
-    pub.on('end', function(e){
-        logger.info('Redis hung up, committing suicide');
-        process.exit(1);
-    });
 
     const messageHandler = require('./messageHandler')();
 
