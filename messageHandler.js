@@ -27,7 +27,7 @@ function MessageHandler() {
     );
 
     sub.on('end', function (e) {
-        console.log('Redis hung up, committing suicide');
+        logger.error('Redis hung up, committing suicide');
         process.exit(1);
     });
 
@@ -51,6 +51,7 @@ function MessageHandler() {
                 break;
 
             case 'smartthings.device.event':
+                logger.debug( 'smartthings.device.event => ' + JSON.stringify(  data ) );
                 that.emit('device.event', data);
                 break;
             case 'sentinel.device.update':
