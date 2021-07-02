@@ -281,7 +281,7 @@ function _module(config) {
             return 'valve';
         }
         if ( capabilities.find(e => e === 'water') ){
-            return 'sensor.water';
+            return 'sensor.leak';
         }
         if ( capabilities.find(e => e === 'motion') ){
             return 'sensor.motion';
