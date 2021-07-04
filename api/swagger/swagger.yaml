@@ -302,6 +302,34 @@ paths:
         default:
           $ref: '#/responses/Error'
 
+  /valve/{id}/{state}:
+    x-swagger-router-controller: valve
+    get:
+      operationId: setValveState
+      security:
+        - Oauth:
+            - user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: path
+          name: state
+          required: true
+          type: string
+          enum: [
+            open,
+            close
+          ]
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+
   /lock/{id}/{state}:
     x-swagger-router-controller: lock
     get:
